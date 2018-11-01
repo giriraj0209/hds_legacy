@@ -94,7 +94,11 @@ module HealthDataStandards
 
         # Find all of the entries on a patient that match the given data criteria
         def entries_for_data_criteria(data_criteria, patient)
-
+            puts "################# Data Criteria details #######################"
+            puts data_criteria.definition
+            puts data_criteria.status
+            puts data_criteria.negation
+            puts "###################### DC END ###########################"
           data_criteria_oid = HQMFTemplateHelper.template_id_by_definition_and_status(data_criteria.definition,
                                                                                       data_criteria.status || '',
                                                                                        data_criteria.negation)
