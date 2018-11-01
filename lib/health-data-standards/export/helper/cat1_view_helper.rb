@@ -6,6 +6,9 @@ module HealthDataStandards
 
         def render_data_criteria(dc, entries, r2_compatibility, qrda_version = nil)
           html_array = entries.map do |entry|
+              puts "*************entry****************"
+              puts entry._type
+              puts "*************entry end************"
               bundle_id = entry.record ? entry.record["bundle_id"] : nil
               vs_map = (value_set_map(bundle_id) || {})[dc['value_set_oid']]
               render(:partial => HealthDataStandards::Export::QRDA::EntryTemplateResolver.partial_for(dc['data_criteria_oid'], dc['value_set_oid'], qrda_version), :locals => {:entry => entry,
