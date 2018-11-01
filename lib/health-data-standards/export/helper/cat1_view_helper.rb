@@ -39,7 +39,7 @@ module HealthDataStandards
             begin
               if patient.medical_record_number == "67c2352b-8dff-4602-9fad-9a94ee58d488_1_pid_5b75a024c0fe37ed8a9d92b2"
                 puts "**********udc data criteria***********"
-                puts udc['data_criteria']
+                puts udc['data_criteria'].to_yaml
               end
               entries = entries_for_data_criteria(udc['data_criteria'], patient)
               render_data_criteria(udc, entries, r2_compatibility, qrda_version)
