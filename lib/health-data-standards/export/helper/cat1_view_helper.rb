@@ -6,9 +6,10 @@ module HealthDataStandards
 
         def render_data_criteria(dc, entries, r2_compatibility, qrda_version = nil)
           html_array = entries.map do |entry|
-              puts "*************entry****************"
+              puts "*****entry*********"
               puts entry._type
-              puts "*************entry end************"
+              puts entry.description
+              puts "********e******"
               bundle_id = entry.record ? entry.record["bundle_id"] : nil
               vs_map = (value_set_map(bundle_id) || {})[dc['value_set_oid']]
               render(:partial => HealthDataStandards::Export::QRDA::EntryTemplateResolver.partial_for(dc['data_criteria_oid'], dc['value_set_oid'], qrda_version), :locals => {:entry => entry,
@@ -26,21 +27,21 @@ module HealthDataStandards
         def render_patient_data(patient, measures, r2_compatibility, qrda_version = nil)
           HealthDataStandards.logger.warn("Generating CAT I for #{patient.first} #{patient.last}")
           if patient.medical_record_number == "67c2352b-8dff-4602-9fad-9a94ee58d488_1_pid_5b75a024c0fe37ed8a9d92b2"
-            #puts patient.to_yaml
             puts "**************"
-            puts patient.medications
+            puts "********R2  #{r2_compatibility}"
+            puts "********QRDA #{qrda_version}"
+            puts patient.medications.to_yaml
             puts "******end*********"
           end
           udcs = unique_data_criteria(measures, r2_compatibility)
           data_criteria_html = udcs.map do |udc|
             # If there's an error exporting particular criteria, re-raise an error that includes useful debugging info
             begin
-              entries = entries_for_data_criteria(udc['data_criteria'], patient)
               if patient.medical_record_number == "67c2352b-8dff-4602-9fad-9a94ee58d488_1_pid_5b75a024c0fe37ed8a9d92b2"
-                puts "*****entries*********"
-                puts entries
-                puts "********e******"
+                puts "**********udc data criteria***********"
+                puts udc['data_criteria']
               end
+              entries = entries_for_data_criteria(udc['data_criteria'], patient)
               render_data_criteria(udc, entries, r2_compatibility, qrda_version)
             rescue => e
               raise HealthDataStandards::Export::PatientExportDataCriteriaException.new(e.message, patient, udc['data_criteria'], entries)
