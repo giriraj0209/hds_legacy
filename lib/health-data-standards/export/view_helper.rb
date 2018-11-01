@@ -92,16 +92,14 @@ module HealthDataStandards
       end
 
       def dose_quantity(codes, dose)
-        puts "**************** Dose quantity **************"
-        puts codes
-        puts dose
-        puts "*************** end *******************"
         if (codes["RxNorm"].present? || codes["CVX"].present?)
           if dose['unit'].present?
             return "value='1' unit='#{ucum_for_dose_quantity(dose['unit'])}'"
           else
             return "value='1'"
           end
+        else if (dose['value'].present? || dose['unit'].present?)
+          return "value='#{dose['value']}' unit='#{dose['unit']}'"
         else
           return "value='#{dose['scalar']}' unit='#{dose['units']}'"
         end
