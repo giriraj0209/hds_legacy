@@ -25,11 +25,22 @@ module HealthDataStandards
 
         def render_patient_data(patient, measures, r2_compatibility, qrda_version = nil)
           HealthDataStandards.logger.warn("Generating CAT I for #{patient.first} #{patient.last}")
+          if patient.medical_record_number == "67c2352b-8dff-4602-9fad-9a94ee58d488_1_pid_5b75a024c0fe37ed8a9d92b2"
+            #puts patient.to_yaml
+            puts "**************"
+            puts patient.medications
+            puts "******end*********"
+          end
           udcs = unique_data_criteria(measures, r2_compatibility)
           data_criteria_html = udcs.map do |udc|
             # If there's an error exporting particular criteria, re-raise an error that includes useful debugging info
             begin
               entries = entries_for_data_criteria(udc['data_criteria'], patient)
+              if patient.medical_record_number == "67c2352b-8dff-4602-9fad-9a94ee58d488_1_pid_5b75a024c0fe37ed8a9d92b2"
+                puts "*****entries*********"
+                puts entries
+                puts "********e******"
+              end
               render_data_criteria(udc, entries, r2_compatibility, qrda_version)
             rescue => e
               raise HealthDataStandards::Export::PatientExportDataCriteriaException.new(e.message, patient, udc['data_criteria'], entries)
