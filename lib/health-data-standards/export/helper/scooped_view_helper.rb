@@ -124,6 +124,8 @@ module HealthDataStandards
                                                    data_criteria.negation ? data_criteria.code_list_id : nil)
 
             case data_criteria_oid
+            when '2.16.840.1.113883.3.560.1.64'
+              entries.concat patient.entries_for_oid('2.16.840.1.113883.3.560.1.14')
             when '2.16.840.1.113883.3.560.1.5'
               #special case handling for Lab Test: Performed being implicitly available through a Lab Test: Result
               entries.concat patient.entries_for_oid('2.16.840.1.113883.3.560.1.12')
