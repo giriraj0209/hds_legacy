@@ -105,7 +105,9 @@ module HealthDataStandards
           HealthDataStandards.logger.debug("Looking for dc [#{data_criteria_oid}]")
           filtered_entries = []
           entries = []
-
+            puts "################# Data Criteria OID #######################"
+            puts data_criteria_oid
+            puts "###################### END ###########################"
           case data_criteria_oid
           when '2.16.840.1.113883.3.560.1.404'
             filtered_entries = handle_patient_expired(patient)
