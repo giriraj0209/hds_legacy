@@ -133,10 +133,10 @@ module HealthDataStandards
             when '2.16.840.1.113883.3.560.1.110'
               f = File.open('patientlog.txt' , 'a')
               f.puts("^^^^^^^^^^^^^^^^^^^^ Patient entries for Device applied ^^^^^^^^^^^^^^^^^^")
-              f.puts(patient.entries_for_oid('2.16.840.1.113883.3.560.1.110'))
+              f.puts(patient.entries_for_oid('2.16.840.1.113883.3.560.1.110')._type)
               f.puts("^^^^^^^^^^^^^^^^^^^^^^^^^ end ^^^^^^^^^^^^^^^^^^^^^^^^")
               f.close
-              entries.concat patient.entries_for_oid('2.16.840.1.113883.3.560.1.110')  
+              #entries.concat patient.entries_for_oid('2.16.840.1.113883.3.560.1.110')  
             when '2.16.840.1.113883.3.560.1.5'
               #special case handling for Lab Test: Performed being implicitly available through a Lab Test: Result
               entries.concat patient.entries_for_oid('2.16.840.1.113883.3.560.1.12')
@@ -158,35 +158,54 @@ module HealthDataStandards
                 codes = (value_set_map(patient["bundle_id"])[code_list_id] || [])
               end
             end
-
+            f = File.open('patientlog.txt' , 'a')
+            f.puts("^^^^^^^^^^^^^^^^^^^^ vs map bundle id and data critieria code list id ^^^^^^^^^^^^^^^^^^")
+            f.puts(value_set_map(patient["bundle_id"]))
+            f.puts("^^^^^^^^^^^^^^^^^^^^dc code list ^^^^^^^^^^^^^^")
+            f.puts(data_criteria.code_list_id)
+            f.puts("^^^^^^^^^^^^^^^^^^^^^^^^^ DC CL end ^^^^^^^^^^^^^^^^^^^^^^^^")
             codes ||= (value_set_map(patient["bundle_id"])[data_criteria.code_list_id] || [])
             if codes.empty?
+              f.puts("%^%^%^%^%^ Codes Empty %^%^%^")
+              f.puts(data_criteria_oid)
+              f.puts("No codes for #{data_criteria.title}")
               HealthDataStandards.logger.warn("No codes for #{data_criteria.code_list_id}")
             end
             entries.uniq! {|e| e["_id"]}
             filtered_entries = entries.find_all do |entry|
               # This special case is for when the code list is a reason
+              f.puts("$$$$$$ IN FILTERED ENTRIES $$$$$$$$$$")
+              f.puts("entry type")
+              f.puts(entry._type)
               if data_criteria.code_list_id =~ /2\.16\.840\.1\.113883\.3\.526\.3\.100[7-9]/
+                f.puts("IN If something")
                 entry.negation_reason.present? && codes.first['values'].include?(entry.negation_reason['code'])
               elsif data_criteria_oid == '2.16.840.1.113883.3.560.1.71'
+                f.puts("IN elsif something one")
                 if (entry.transferFrom)
                   entry.transferFrom.codes[entry.transferFrom.code_system] = [entry.transferFrom.code]
                   tfc = entry.transferFrom.codes_in_code_set(codes).values.first
                   tfc && !tfc.empty?
                 end
               elsif data_criteria_oid == '2.16.840.1.113883.3.560.1.72'
+                f.puts("IN elsif something two")
                 if (entry.transferTo)
                   entry.transferTo.codes[entry.transferTo.code_system] = [entry.transferTo.code]
                   ttc = entry.transferTo.codes_in_code_set(codes).values.first
                   ttc && !ttc.empty?
                 end
               else
+                f.puts("IN else of something")
                 # The !! hack makes sure that negation_ind is a boolean. negations use the same hqmf templates in r2
                 entry.is_in_code_set?(codes) && (is_hqmfr2 || !!entry.negation_ind == data_criteria.negation)
               end
             end
+           f.close
           end
           if filtered_entries.empty?
+            f = File.open('patientlog.txt' , 'a')
+            f.puts("No entries for #{data_criteria.title}")
+            f.close
             HealthDataStandards.logger.debug("No entries for #{data_criteria.title}")
           end
           filtered_entries
