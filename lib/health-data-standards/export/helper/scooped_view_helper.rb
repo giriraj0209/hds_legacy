@@ -133,7 +133,7 @@ module HealthDataStandards
             when '2.16.840.1.113883.3.560.1.110'
               f = File.open('patientlog.txt' , 'a')
               f.puts("^^^^^^^^^^^^^^^^^^^^ Patient entries for Device applied ^^^^^^^^^^^^^^^^^^")
-              f.puts(patient.entries_for_oid('2.16.840.1.113883.3.560.1.110')._type)
+              f.puts(patient.entries_for_oid('2.16.840.1.113883.3.560.1.110'))
               f.puts("^^^^^^^^^^^^^^^^^^^^^^^^^ end ^^^^^^^^^^^^^^^^^^^^^^^^")
               f.close
               #entries.concat patient.entries_for_oid('2.16.840.1.113883.3.560.1.110')  
@@ -160,7 +160,7 @@ module HealthDataStandards
             end
             f = File.open('patientlog.txt' , 'a')
             f.puts("^^^^^^^^^^^^^^^^^^^^ vs map bundle id and data critieria code list id ^^^^^^^^^^^^^^^^^^")
-            f.puts(value_set_map(patient["bundle_id"]))
+            #f.puts(value_set_map(patient["bundle_id"]))
             f.puts("^^^^^^^^^^^^^^^^^^^^dc code list ^^^^^^^^^^^^^^")
             f.puts(data_criteria.code_list_id)
             f.puts("^^^^^^^^^^^^^^^^^^^^^^^^^ DC CL end ^^^^^^^^^^^^^^^^^^^^^^^^")
