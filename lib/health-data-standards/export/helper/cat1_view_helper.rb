@@ -7,10 +7,10 @@ module HealthDataStandards
         def render_data_criteria(dc, entries, r2_compatibility, qrda_version = nil)
           html_array = entries.map do |entry|
              f = File.open('patientlog.txt' , 'a')
-              f.write("*****entry*********")
-              f.write(entry._type)
-              f.write(entry.description)
-              f.write("********e******")
+              f.puts("*****entry*********")
+              f.puts(entry._type)
+              f.puts(entry.description)
+              f.puts("********e******")
               f.close
               bundle_id = entry.record ? entry.record["bundle_id"] : nil
               vs_map = (value_set_map(bundle_id) || {})[dc['value_set_oid']]
