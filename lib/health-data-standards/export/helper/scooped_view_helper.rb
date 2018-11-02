@@ -95,11 +95,11 @@ module HealthDataStandards
         # Find all of the entries on a patient that match the given data criteria
         def entries_for_data_criteria(data_criteria, patient)
           f = File.open('patientlog.txt' , 'a')
-          f.write("################# Data Criteria details #######################")
-          f.write(data_criteria.definition)
-          f.write(data_criteria.status)
-          f.write(data_criteria.negation)
-          f.write("###################### DC END ###########################")
+          f.puts("################# Data Criteria details #######################")
+          f.puts(data_criteria.definition)
+          f.puts(data_criteria.status)
+          f.puts(data_criteria.negation)
+          f.puts("###################### DC END ###########################")
           f.close
           data_criteria_oid = HQMFTemplateHelper.template_id_by_definition_and_status(data_criteria.definition,
                                                                                       data_criteria.status || '',
@@ -112,9 +112,9 @@ module HealthDataStandards
           filtered_entries = []
           entries = []
           f = File.open('patientlog.txt' , 'a')
-          f.write("################# Data Criteria OID #######################")
-          f.write(data_criteria_oid)
-          f.write("###################### END ###########################")
+          f.puts("################# Data Criteria OID #######################")
+          f.puts(data_criteria_oid)
+          f.puts("###################### END ###########################")
           f.close
           case data_criteria_oid
           when '2.16.840.1.113883.3.560.1.404'
