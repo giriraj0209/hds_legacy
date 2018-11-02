@@ -18,9 +18,6 @@ module HealthDataStandards
       end
 
       def self.template_id_by_definition_and_status(definition, status, negation=false, version="r1")
-        puts "$$$$$$$$$$$ version $$$$$$$$$"
-        puts version
-        puts "$$$$$$$$$$$ end $$$$$$$$$$$$"
         case version
         when "r1"
           kv_pair = template_id_map(version).find {|k, v| v['definition'] == definition &&
