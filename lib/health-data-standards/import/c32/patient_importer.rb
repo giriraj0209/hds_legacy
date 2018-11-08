@@ -130,10 +130,13 @@ module HealthDataStandards
           patient.title = patient_element.at_xpath('cda:name/cda:title').try(:text)
           patient.first = patient_element.at_xpath('cda:name/cda:given').text
           patient.last = patient_element.at_xpath('cda:name/cda:family').text
+          puts patient_element.at_xpath('cda:birthTime')
           birthdate_in_hl7ts_node = patient_element.at_xpath('cda:birthTime')
           birthdate_in_hl7ts = birthdate_in_hl7ts_node['value']
+          puts birthdate_in_hl7ts
           patient.birthdate = HL7Helper.timestamp_to_integer(birthdate_in_hl7ts)
-
+          puts "patient birthday"
+          puts patient.birthdate
           gender_node = patient_element.at_xpath('cda:administrativeGenderCode')
           patient.gender = gender_node['code']
           id_node = patient_role_element.at_xpath('./cda:id')
